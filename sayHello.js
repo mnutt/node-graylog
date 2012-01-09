@@ -1,7 +1,8 @@
-require('./graylog');
+var graylog = require('./graylog'),
+    log = graylog.log;
 
-GLOBAL.graylogToConsole=true;
-GLOBAL.graylogFacility='hellokitty';
+graylog.toConsole=true;
+graylog.facility='hellokitty';
 
 log(
 	"What we've got here is...failure to communicate.",

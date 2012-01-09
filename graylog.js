@@ -2,22 +2,22 @@ var compress = require('compress-buffer').compress;
 var dgram = require('dgram');
 var util = require('util');
 
-GLOBAL.LOG_EMERG=0;    // system is unusable
-GLOBAL.LOG_ALERT=1;    // action must be taken immediately
-GLOBAL.LOG_CRIT=2;     // critical conditions
-GLOBAL.LOG_ERR=3;      // error conditions
-GLOBAL.LOG_ERROR=3;    // because people WILL typo
-GLOBAL.LOG_WARNING=4;  // warning conditions
-GLOBAL.LOG_NOTICE=5;   // normal, but significant, condition
-GLOBAL.LOG_INFO=6;     // informational message
-GLOBAL.LOG_DEBUG=7;    // debug-level message
+exports.LOG_EMERG=0;    // system is unusable
+exports.LOG_ALERT=1;    // action must be taken immediately
+exports.LOG_CRIT=2;     // critical conditions
+exports.LOG_ERR=3;      // error conditions
+exports.LOG_ERROR=3;    // because people WILL typo
+exports.LOG_WARNING=4;  // warning conditions
+exports.LOG_NOTICE=5;   // normal, but significant, condition
+exports.LOG_INFO=6;     // informational message
+exports.LOG_DEBUG=7;    // debug-level message
 
-GLOBAL.graylogHost = 'localhost';
-GLOBAL.graylogPort = 12201;
-GLOBAL.graylogHostname = require('os').hostname();
-GLOBAL.graylogToConsole = false;
-GLOBAL.graylogFacility = 'Node.js';
-GLOBAL.graylogSequence = 0;
+exports.graylogHost = 'localhost';
+exports.graylogPort = 12201;
+exports.graylogHostname = require('os').hostname();
+exports.graylogToConsole = false;
+exports.graylogFacility = 'Node.js';
+exports.graylogSequence = 0;
 
 
 function _logToConsole(shortMessage, opts) {
@@ -34,7 +34,7 @@ function _logToConsole(shortMessage, opts) {
 				"  " +
 				key.substr(1,1024) +
 				": " +
-				'\033[' + 34 + 'm' + 
+				'\033[' + 34 + 'm' +
 				opts[key] +
 				'\033[' + 39 + 'm'
 			);
@@ -59,17 +59,17 @@ function log(shortMessage, a, b) {
 
 	opts.version="1.0";
 	opts.timestamp = opts.timestamp || new Date().getTime()/1000 >> 0;
-	opts.host = opts.host || GLOBAL.graylogHostname;
+	opts.host = opts.host || exports.graylogHostname;
 	opts.level = opts.level || LOG_INFO;
-	opts.facility = opts.facility || GLOBAL.graylogFacility;
+	opts.facility = opts.facility || exports.graylogFacility;
 
-	if (GLOBAL.graylogSequence) {
-		opts['_logSequence'] = GLOBAL.graylogSequence++;
+	if (exports.graylogSequence) {
+		opts['_logSequence'] = exports.graylogSequence++;
 	}
 
 	opts.short_message = shortMessage;
-	
-	if (GLOBAL.graylogToConsole) { 
+
+	if (exports.graylogToConsole) {
 		_logToConsole(shortMessage, opts);
 	}
 
@@ -79,13 +79,13 @@ function log(shortMessage, a, b) {
 		return;
 	}
 
-	try { 
+	try {
 		var graylog2Client = dgram.createSocket("udp4");
-		graylog2Client.send(message, 0, message.length, GLOBAL.graylogPort, GLOBAL.graylogHost, function() {
+		graylog2Client.send(message, 0, message.length, exports.graylogPort, exports.graylogHost, function() {
 		  graylog2Client.close();
     });
-	} catch(e) { 
+	} catch(e) {
 	}
 }
 
-GLOBAL.log = log;
+exports.log = log;
