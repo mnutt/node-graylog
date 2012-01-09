@@ -81,8 +81,9 @@ function log(shortMessage, a, b) {
 
 	try { 
 		var graylog2Client = dgram.createSocket("udp4");
-		graylog2Client.send(message, 0, message.length, GLOBAL.graylogPort, GLOBAL.graylogHost, function() {});
-		graylog2Client.close();
+		graylog2Client.send(message, 0, message.length, GLOBAL.graylogPort, GLOBAL.graylogHost, function() {
+		  graylog2Client.close();
+    });
 	} catch(e) { 
 	}
 }
